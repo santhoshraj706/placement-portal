@@ -37,7 +37,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
 
-    @Value("${app.cors.allowed-origins:http://localhost:5173,http://localhost:3000,http://localhost:4173}")
+    @Value("${app.cors.allowed-origins:https://pp-beige-iota.vercel.app,http://localhost:5173,http://localhost:3000,http://localhost:4173}")
     private String allowedOrigins;
 
     @Bean
@@ -69,14 +69,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        List<String> origins = Arrays.stream(allowedOrigins.split(","))
-                .map(String::trim)
-                .toList();
-        if (origins.contains("*")) {
-            configuration.setAllowedOriginPatterns(List.of("*"));
-        } else {
-            configuration.setAllowedOrigins(origins);
-            configuration.setAllowedOriginPatterns(List.of("https://*.vercel.app", "http://localhost:*"));
+        configuration.setAllowedOriginPatterns(List.of("https://*.vercel.app", "http://localhost:*", "http://127.0.0.1:*"));
+        for (String origin : allowedOrigins.split(",")) {
+            String trimmed = origin.trim();
+            if (!trimmed.isBlank()) {
+                configuration.addAllowedOrigin(trimmed);
+            }
         }
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));

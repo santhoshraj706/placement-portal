@@ -72,6 +72,8 @@ logging:
     org.springframework.security: WARN
 
 app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://pp-beige-iota.vercel.app,http://localhost:5173,http://localhost:3000,http://localhost:4173}
   seed-bulk-demo-data: ${SEED_BULK_DEMO_DATA:false}
   seed-bulk-demo-cleanup: ${SEED_BULK_DEMO_CLEANUP:false}
   preparation:

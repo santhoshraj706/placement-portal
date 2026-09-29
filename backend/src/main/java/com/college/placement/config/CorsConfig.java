@@ -12,14 +12,18 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    @Value("${app.cors.allowed-origins:http://localhost:5173}")
+    @Value("${app.cors.allowed-origins:https://pp-beige-iota.vercel.app,http://localhost:5173,http://localhost:3000,http://localhost:4173}")
     private String allowedOrigins;
 
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("https://*.vercel.app", "http://localhost:*", "http://127.0.0.1:*"));
         for (String origin : allowedOrigins.split(",")) {
-            config.addAllowedOrigin(origin.trim());
+            String trimmed = origin.trim();
+            if (!trimmed.isBlank()) {
+                config.addAllowedOrigin(trimmed);
+            }
         }
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
