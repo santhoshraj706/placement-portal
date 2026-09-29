@@ -7,7 +7,7 @@ export interface MessageStreamHandlers {
   onEvent?: (event: string, data: unknown) => void;
 }
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://placement-portal-backend-61sd.onrender.com/api';
 
 export async function streamMessageEvents({ signal, onOpen, onEvent }: MessageStreamHandlers): Promise<void> {
   const token = localStorage.getItem('token');

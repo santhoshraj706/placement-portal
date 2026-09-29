@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://placement-portal-backend-61sd.onrender.com/api',
   headers: { 'Content-Type': 'application/json' },
   timeout: 60000,
 });
