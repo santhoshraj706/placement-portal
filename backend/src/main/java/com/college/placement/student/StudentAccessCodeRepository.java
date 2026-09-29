@@ -19,6 +19,9 @@ public interface StudentAccessCodeRepository extends JpaRepository<StudentAccess
 
     boolean existsByRegisterNumber(String registerNumber);
 
+    /** Batch lookup used by the PO student CSV import to avoid per-row queries. */
+    List<StudentAccessCode> findAllByRegisterNumberIn(java.util.Collection<String> registerNumbers);
+
     Optional<StudentAccessCode> findByRegisterNumberAndUsedAtIsNull(String registerNumber);
 
     /**
@@ -31,4 +34,6 @@ public interface StudentAccessCodeRepository extends JpaRepository<StudentAccess
      */
     @Query("select sac from StudentAccessCode sac where sac.registerNumber like concat('%', :suffix)")
     List<StudentAccessCode> findByRegisterNumberEndingWith(@Param("suffix") String suffix);
+
+    Optional<StudentAccessCode> findByEmailIgnoreCase(String email);
 }

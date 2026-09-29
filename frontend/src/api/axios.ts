@@ -19,7 +19,7 @@ api.interceptors.response.use(
       const status = error.response.status;
       if (status === 401) {
         const url: string = error.config?.url || '';
-        const isAuthEndpoint = url.includes('/auth/login') || url.includes('/auth/register');
+        const isAuthEndpoint = url.includes('/auth/login') || url.includes('/auth/register') || url.includes('/auth/registration');
         const hasToken = !!localStorage.getItem('token');
 
         if (!isAuthEndpoint) {
