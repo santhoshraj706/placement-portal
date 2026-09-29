@@ -5,6 +5,8 @@ import { Button, Input } from '../../components/ui';
 import { LiquidBlob } from '../../components/ui/Liquid';
 import { AlertCircle, Mail, Lock, GraduationCap, ChevronDown } from 'lucide-react';
 
+import { getErrorMessage } from '../../api/axios';
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,12 +24,14 @@ export default function LoginPage() {
     try {
       await login(email, password);
       navigate('/dashboard');
-    } catch (err: unknown) {
-      const e = err as { response?: { data?: { message?: string } } };
-      if (!e.response) {
-        setError('Unable to connect to the server. Please check your connection and try again.');
+    } catch (err: any) {
+      const serverMessage = err?.response?.data?.message || err?.response?.data?.error;
+      if (serverMessage) {
+        setError(serverMessage);
+      } else if (err?.response?.status === 401) {
+        setError('Invalid email or password.');
       } else {
-        setError(e.response.data?.message || 'Invalid email or password.');
+        setError(getErrorMessage(err));
       }
     } finally {
       setLoading(false);
