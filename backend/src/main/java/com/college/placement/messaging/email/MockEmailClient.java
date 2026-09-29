@@ -40,14 +40,19 @@ public class MockEmailClient implements EmailDispatchClient {
                 break;
         }
         String providerMessageId = "mock-" + UUID.randomUUID();
-        mongoTemplate.insert(MongoMockSentEmail.builder()
-                .messageId(draft.messageId())
-                .recipientUserId(draft.recipientUserId())
-                .email(draft.toEmail())
-                .subject(draft.subject())
-                .providerMessageId(providerMessageId)
-                .sentAt(LocalDateTime.now())
-                .build());
+        try {
+            mongoTemplate.insert(MongoMockSentEmail.builder()
+                    .messageId(draft.messageId())
+                    .recipientUserId(draft.recipientUserId())
+                    .email(draft.toEmail())
+                    .subject(draft.subject())
+                    .providerMessageId(providerMessageId)
+                    .sentAt(LocalDateTime.now())
+                    .build());
+        } catch (Exception e) {
+            log.warn("[MOCK EMAIL] Mongo insertion skipped (Mongo unavailable or disabled): {}", e.getMessage());
+        }
+        log.info("[MOCK EMAIL] Successfully dispatched mock email to {}", draft.toEmail());
         return providerMessageId;
     }
 }
