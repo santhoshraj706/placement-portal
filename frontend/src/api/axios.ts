@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+// Normalise base URL: Vercel env var may or may not include /api suffix
+const _rawBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)
+  || 'https://placement-portal-backend-61sd.onrender.com';
+const _baseURL = _rawBase.replace(/\/api\/?$/, '') + '/api';
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://placement-portal-backend-61sd.onrender.com/api',
+  baseURL: _baseURL,
   headers: { 'Content-Type': 'application/json' },
   timeout: 60000,
 });
