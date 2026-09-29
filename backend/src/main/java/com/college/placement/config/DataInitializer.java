@@ -243,4 +243,34 @@ public class DataInitializer {
             }
         };
     }
+
+    @Bean
+    @Order(2)
+    CommandLineRunner seedStudentAccessCodes(com.college.placement.student.StudentAccessCodeRepository accessCodeRepository,
+                                             PasswordEncoder passwordEncoder) {
+        return args -> {
+            record StudentSeed(String email, String regNum, String name, String dept) {}
+            List<StudentSeed> seeds = List.of(
+                    new StudentSeed("karthikeyanrj@student.tce.edu", "24C21031", "Karthikeyan RJ", "CSE"),
+                    new StudentSeed("karthikeyanrj@student.tce.edu", "22C21031", "Karthikeyan RJ", "CSE"),
+                    new StudentSeed("santhoshraj@student.tce.edu", "24C21084", "Santhosh Raj", "CSE"),
+                    new StudentSeed("santhoshraj@student.tce.edu", "22cs1084", "Santhosh Raj", "CSE"),
+                    new StudentSeed("student1@student.tce.edu", "24C21001", "Student One", "CSE")
+            );
+
+            for (StudentSeed seed : seeds) {
+                if (accessCodeRepository.findByRegisterNumber(seed.regNum()).isEmpty()) {
+                    accessCodeRepository.save(com.college.placement.student.StudentAccessCode.builder()
+                            .email(seed.email())
+                            .registerNumber(seed.regNum())
+                            .name(seed.name())
+                            .departmentCode(seed.dept())
+                            .codeHash(passwordEncoder.encode("DEMO_ACCESS_CODE"))
+                            .active(true)
+                            .build());
+                    log.info("Seeded StudentAccessCode for {} (register: {})", seed.email(), seed.regNum());
+                }
+            }
+        };
+    }
 }
